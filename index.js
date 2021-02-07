@@ -1,15 +1,21 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 
-const server = express()
-const router = express.Router()
+const app = express()
 
-router.use('/price', (req, res, next)=> {
-    res.json({price : 40000});
+
+app.use(bodyParser.json()) //Karena Typenya JSON
+
+
+//Panggil Router yang telah dibuat
+const productRoutes = require('./src/routes/products');
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Controll-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.setHeader('Access-Controll-Allow-Headers', 'Content-Type, Authorization');
     next();
 })
-router.get('/users', (req, res, next)=>{
-    res.json({name: "Dewa Dwi", email: "Dewadwi@hotmail.com"})
-    next();
-})
-server.use('/', router)
-server.listen(4000)
+
+app.use('/', productRoutes);
+app.listen(4000)
